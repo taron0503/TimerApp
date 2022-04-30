@@ -1,31 +1,58 @@
 package com.example.timerapp;
 
-public class TimerEntity {
-    private int hours;
-    private int minutes;
-    private int seconds;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
+import java.util.concurrent.TimeUnit;
+
+public class TimerEntity extends BaseObservable {
+
+    private long timeInMills;
+//    private int hours;
+//    private int minutes;
+//    private int seconds;
+
+    public TimerEntity(long timeInMills) {
+        this.timeInMills = timeInMills;
+    }
+
+    @Bindable
+    public long getTimeInMills() {
+        return timeInMills;
+    }
+
+    public void setTimeInMills(long timeInMills) {
+        this.timeInMills = timeInMills;
+        notifyPropertyChanged(BR.timeInMills);
+    }
+
+    @Bindable
     public int getHours() {
-        return hours;
+        return (int) (timeInMills/(60*60*1000)%24);
     }
 
     public void setHours(int hours) {
-        this.hours = hours;
+        long newTime = timeInMills - (getHours()*360000) + hours*360000;;
+        setTimeInMills(newTime);
     }
 
+    @Bindable
     public int getMinutes() {
-        return minutes;
+        return ((int) (timeInMills/(60*1000)) % 60);
     }
 
     public void setMinutes(int minutes) {
-        this.minutes = minutes;
+        long newTime = timeInMills - (getMinutes()*60000) + minutes*60000;
+        setTimeInMills(newTime);
     }
 
+    @Bindable
     public int getSeconds() {
-        return seconds;
+        return (int) ((timeInMills/1000) % 60);
     }
 
     public void setSeconds(int seconds) {
-        this.seconds = seconds;
+        long newTime = timeInMills - (getSeconds()*1000) + seconds*1000;;
+        setTimeInMills(newTime);
     }
 }
